@@ -20,7 +20,7 @@ export default class extends EventEmitter {
         return this.options.map.controls;
     }
 
-    getMap() {
+    createMap() {
         let map = new ymaps.Map(this.container, {
             center: this.getCenter(),
             zoom: this.getZoom(),

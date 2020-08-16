@@ -5,6 +5,7 @@ import yaMapLoader from './yamap/yamap-loader';
 import yaMapDirections from './yamap/yamap-directions';
 import yaMapLink from './yamap/yamap-link';
 import yaMapShare from './yamap/yamap-share';
+import {ElementUtil} from "../lib/utils";
 
 export default class extends YaMap {
 
@@ -14,6 +15,12 @@ export default class extends YaMap {
             zoom: 10,
             type: 'yandex#map',
             controls: []
+        },
+
+        canvas: {
+            position: 'relative',
+            width: '100%',
+            height: '750px'
         },
 
         markers: {
@@ -128,7 +135,8 @@ export default class extends YaMap {
     }
 
     start() {
-        this.map = this.getMap();
+        this.prepareCanvas();
+        this.map = this.createMap();
 
         this.markers = [
             this.createMarker(this.options.markers.start),
@@ -246,5 +254,9 @@ export default class extends YaMap {
                 from: userTextLocation,
             });
         });
+    }
+
+    prepareCanvas() {
+        ElementUtil.set(this.container, 'styles', this.options.canvas);
     }
 }
