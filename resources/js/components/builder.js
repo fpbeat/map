@@ -96,7 +96,8 @@ export default class extends YaMap {
         this.share = new yaMapShare(Object.assign({}, this.options.share, {
             beforeOpen: () => {
                 return this.link.get(this.current)
-            }
+            },
+            onMobileClick: this.openOnYandex.bind(this),
         }));
 
         this.directions = new yaMapDirections(Object.assign({}, this.options.directions, {

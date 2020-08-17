@@ -22,7 +22,7 @@
     "@babel/plugin-syntax-dynamic-import": "^7.8",
     "@babel/preset-env": "^7.9",
     "@rollup/plugin-alias": "^3.1",
-    "@rollup/plugin-babel": "^5.0",
+    "@rollup/plugin-babel": "^5.2.0",
     "@rollup/plugin-commonjs": "^11.0",
     "@rollup/plugin-node-resolve": "^7.1",
     "@rollup/plugin-replace": "^2.3.2",

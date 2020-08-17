@@ -9,7 +9,7 @@ export default class extends EventEmitter {
     options = {
         telegram: 'tg://resolve?domain=fpbeat',
         viber: 'viber://public?id=swelly',
-        whatsapp: 'whatsapp://send?abid=+380930250200&text=sometext',
+        whatsapp: 'whatsapp://send?abid=+380930250200&text=getlocation',
 
         classes: {
             container: 'ya-map-route__share-button',
@@ -17,14 +17,15 @@ export default class extends EventEmitter {
         },
 
         texts: {
-            button: 'Отправить на телефон'
+            buttonDesktop: 'Отправить на телефон',
+            buttonMobile: 'Открыть в приложении Карты'
         },
 
         template: '<div class="ya-map-route__share-popup">' +
             '<img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data={qr}">' +
             '<div class="ya-map-route__share-social">' +
-            '<a href="{telegram}" target="_blank" rel="telegram"></a>' +
             '<a href="{whatsapp}" target="_blank" rel="whatsapp"></a>' +
+            '<a href="{telegram}" target="_blank" rel="telegram"></a>' +
             '<a href="{viber}" target="_blank" rel="viber"></a>' +
             '</div>' +
             '</div>'
@@ -32,6 +33,11 @@ export default class extends EventEmitter {
 
     constructor(options = {}) {
         super();
+
+        this.isMobile = GenericUtil.isMobile({
+            tablet: true,
+            featureDetect: true
+        });
 
         GenericUtil.setOptions(this, options);
     }
@@ -46,25 +52,29 @@ export default class extends EventEmitter {
 
     addButton() {
         ElementUtil.createAndInject('BUTTON', {
-            html: this.options.texts.button,
+            html: this.options.texts[this.isMobile ? 'buttonMobile' : 'buttonDesktop'],
             class: this.options.classes.container,
             events: {
-                click: this.process.bind(this)
+                click: this.isMobile ? this.processMobile.bind(this) : this.processDesktop.bind(this)
             }
         }, this.container);
     }
 
-    process() {
+    processDesktop() {
         let options = ObjectUtil.pick(['telegram', 'viber', 'whatsapp'], this.options);
 
         Swal.fire({
-            title: 'Отправить на телефон',
+            title: this.options.texts.buttonDesktop,
             html: StringUtil.substitute(this.options.template, Object.assign({}, options, {
                 qr: this.options.beforeOpen()
             })),
             showConfirmButton: false,
             showCloseButton: true,
         })
+    }
+
+    processMobile() {
+        this.emit('mobileClick');
     }
 
     toggle(state) {
