@@ -20,8 +20,8 @@
     display: none !important;
 }
 
-.ya-map-route__share-button, .ya-map-route__directions * {
-    font-family: sans-serif;
+.ya-map-route__share-button, .ya-map-route__share-apps *, .ya-map-route__directions *, .swal2-container * {
+    font-family: 'Roboto', sans-serif !important;
 
     font-size: 13px;
 }
@@ -41,37 +41,143 @@
 
         outline: none;
     }
+}
 
-    &.ya-map-route__share-button-hidden {
-        display: none !important;
+.ya-map-route__share-apps {
+    strong {
+        display: none;
+        font-size: 13px;
+        text-align: center;
+    }
+
+    ul {
+        margin: 10px 0 0 0;
+        padding: 0 !important;
+
+        display: flex;
+        justify-content: center;
+
+        li {
+            flex: 1 1 0;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+
+            &[rel="navi"] a {
+                background-image: data-uri('static/images/navi.png');
+                background-color: #f8eec5;
+                background-size: 82% auto;
+                background-position: 3px 7px;
+            }
+
+            &[rel="yandex"] a {
+                background-image: data-uri('static/images/yandex.png');
+                background-color: #f8dad7;
+                background-size: 100% auto;
+            }
+
+            &[rel="google"] a {
+                background-image: data-uri('static/images/google.png');
+                background-color: #c1e6cb;
+                background-size: 95% auto;
+            }
+
+            &[rel="gis"] a {
+                background-image: data-uri('static/images/2gis.png');
+            }
+
+            &[rel="apple"] a {
+                background-image: data-uri('static/images/apple.png');
+            }
+
+            a {
+                display: block;
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                margin: 0 auto 6px auto;
+
+                background-position: 50% 50%;
+                background-repeat: no-repeat;
+                background-size: cover;
+                box-shadow: 1px 2px 2px #ccc;
+                outline: none;
+            }
+
+            label {
+                font-size: 12px;
+                color: #4e4e4e;
+            }
+        }
     }
 }
 
+.swal2-container .swal2-close {
+    font-size: 32px !important;
+}
+
 .ya-map-route__share-popup {
+    h4 {
+        padding: 0 0 10px 0 !important;
+        margin: 10px 0 0 0;
+        font-weight: normal;
+        font-size: 20px;
+    }
 
-    img {
-        display: block;
-        width: 180px;
-        height: 180px;
+    .ya-map-route__share-popup-qr {
+        position: relative;
+        border-top: 1px solid #d4d4d4;
 
-        margin: 12px auto 0 auto;
+        span {
+            position: absolute;
+            display: inline-block;
+            top: -14px;
+            left: auto;
+            padding: 0 10px;
+            background-color: #FFF;
+            font-size: 20px;
+
+            transform: translateX(-50%);
+        }
+
+        margin-top: 30px;
+        padding: 20px 0 10px 0;
+
+        img {
+            display: block;
+            width: 180px;
+            height: 180px;
+
+            margin: 12px auto 0 auto;
+        }
     }
 
     .ya-map-route__share-social {
         text-align: center;
-        margin-top: 27px;
+        margin-top: 20px;
 
         a {
             position: relative;
-            width: 48px;
+            width: auto;
             height: 48px;
             display: inline-block;
             text-align: center;
 
-            margin-left: 20px;
+            color: #4343ef !important;
+            text-decoration: none;
+
+            margin-left: 35px;
 
             &:first-child {
                 margin-left: 0;
+            }
+
+            label {
+                display: block;
+                margin: 12px 0 0 60px;
+                cursor: pointer;
+                font-size: 16px;
             }
 
             &[rel="telegram"] {
@@ -176,4 +282,47 @@
             }
         }
     }
+}
+
+.ya-map-route__toggle {
+    position: relative;
+    margin-top: 33px;
+
+    button {
+        position: absolute;
+        bottom: -10px;
+        left: -20px;
+        width: ~"calc(100% + 40px)";
+        background-color: #eee;
+        border-width: 0;
+
+        padding: 7px 0;
+
+        outline: none;
+        cursor: pointer;
+
+        text-align: center;
+
+        label {
+            display: inline-block;
+            color: #8d8d8d;
+            padding-left: 17px;
+            background-repeat: no-repeat;
+            background-position: 0 2px;
+            background-size: 12px auto;
+            cursor: pointer;
+        }
+
+        &[rel="shown"] label {
+            background-image: data-uri('static/images/up-arrow.svg')
+        }
+
+        &[rel="hidden"] label {
+            background-image: data-uri('static/images/down-arrow.svg')
+        }
+    }
+}
+
+.ya-map-route__hidden {
+    display: none !important;
 }

@@ -21,13 +21,15 @@ export default class extends EventEmitter {
                 "<a href='javascript:void(0)'>Подробнее</a>"
         },
         position: '.ymaps-{version}-controls__toolbar .ymaps-{version}-route-panel__points',
+        input: '.ymaps-{version}-route-panel-input__input',
         classes: {
             container: 'ya-map-route__directions',
             current: 'ya-map-route__directions-current'
         },
 
         texts: {
-            tomorrow: 'завтра, {time}'
+            tomorrow: 'завтра, {time}',
+            fakeTo: 'Дикий лось'
         }
     }
 
@@ -138,5 +140,15 @@ export default class extends EventEmitter {
         }
 
         this.emit('change', route, index);
+    }
+
+    setFakeTo() {
+        let inputs = document.querySelectorAll(StringUtil.substitute(this.options.input, {
+            version: this.options.version
+        }));
+
+        if (inputs && inputs.length > 1) {
+            ElementUtil.set(inputs[1], 'text', this.options.texts.fakeTo);
+        }
     }
 }

@@ -17,6 +17,11 @@ export default {
             return (object[name] !== null) ? object[name] : '';
         });
     },
+
+    ucFirst(string) {
+        let first = string.charAt(0).toUpperCase();
+        return first + string.substr(1, string.length - 1);
+    },
     
     lcFirst(string) {
         let first = string.charAt(0).toLowerCase();

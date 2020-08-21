@@ -1,11 +1,11 @@
-import {GenericUtil} from '~/lib/utils';
+import {GenericUtil, ElementUtil, StringUtil} from '~/lib/utils';
 
 import YaMap from './yamap/yamap';
 import yaMapLoader from './yamap/yamap-loader';
 import yaMapDirections from './yamap/yamap-directions';
 import yaMapLink from './yamap/yamap-link';
 import yaMapShare from './yamap/yamap-share';
-import {ElementUtil} from "../lib/utils";
+import yaMapToggle from './yamap/yamap-toggle';
 
 export default class extends YaMap {
 
@@ -64,6 +64,7 @@ export default class extends YaMap {
         loader: {},
         share: {},
         link: {},
+        toggle: {},
         directions: {},
     };
 
@@ -92,25 +93,32 @@ export default class extends YaMap {
         }));
 
         this.link = new yaMapLink(this.options.link);
+        this.toggle = new yaMapToggle(this.options.toggle);
 
         this.share = new yaMapShare(Object.assign({}, this.options.share, {
             beforeOpen: () => {
-                return this.link.get(this.current)
+                return this.link.getYandexLink(this.current)
             },
-            onMobileClick: this.openOnYandex.bind(this),
+            onAppClick: app => {
+                this.openAppLink(app);
+            }
         }));
 
         this.directions = new yaMapDirections(Object.assign({}, this.options.directions, {
             version: this.loader.getVersion(),
-            onMoreClick: this.openOnYandex.bind(this),
-            onInit: (container) => {
-                this.share.init(container);
+            onMoreClick: this.openAppLink.bind(this, 'yandex'),
+            onInit: (directionContainer) => {
+                let shareContainer = this.share.init(directionContainer);
+
+                this.toggle.init(directionContainer, shareContainer);
             }
         }));
     }
 
-    openOnYandex() {
-        this.link.open(this.link.get(this.current));
+    openAppLink(app) {
+        const name = 'get' + StringUtil.ucFirst(app) + 'Link';
+
+        this.link.open(this.link[name].call(this.link, this.current));
     }
 
     intersectionWatcher() {
@@ -154,8 +162,10 @@ export default class extends YaMap {
         control.routePanel.state.set({
             type: 'auto',
             toEnabled: false,
+            // from: 'Одинцово',
             to: this.map.getCenter(),
         });
+
 
         this.intersectionWatcher();
 
@@ -169,13 +179,17 @@ export default class extends YaMap {
             });
 
             route.model.events.add('requestsuccess', () => {
+                this.directions.setFakeTo();
+                const isRouteEmpty = route.getActiveRoute() === null;
+
                 this.directions.clean();
 
                 this.setCurrentRouteParams(route);
                 this.buildDirections(route);
 
                 this.directions.render();
-                this.share.toggle(route.getActiveRoute() === null);
+                this.share.toggle(isRouteEmpty);
+                this.toggle.toggle(isRouteEmpty);
 
                 route.getWayPoints().each(r => {
                     let index = parseInt(r.properties.get('index'), 10);
@@ -192,7 +206,6 @@ export default class extends YaMap {
 
                     if (coordinate !== null) {
                         this.markers[index].geometry.setCoordinates(coordinate);
-
                     }
                 }
             });
@@ -246,7 +259,7 @@ export default class extends YaMap {
         let control = this.map.controls.get('routePanelControl');
 
         let location = ymaps.geolocation.get({
-            provider: 'auto'
+            provider: 'browser'
         });
 
         location.then(res => {
