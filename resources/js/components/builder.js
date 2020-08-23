@@ -259,11 +259,11 @@ export default class extends YaMap {
         let control = this.map.controls.get('routePanelControl');
 
         let location = ymaps.geolocation.get({
-            provider: 'browser'
+            provider: 'auto'
         });
 
         location.then(res => {
-            var userTextLocation = res.geoObjects.get(0).properties.get('text');
+            let userTextLocation = res.geoObjects.get(0).properties.get('text');
             control.routePanel.state.set({
                 from: userTextLocation,
             });
